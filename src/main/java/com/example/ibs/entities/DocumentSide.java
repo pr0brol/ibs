@@ -1,13 +1,15 @@
 package com.example.ibs.entities;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "document_side")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class DocumentSide {
 

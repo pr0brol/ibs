@@ -14,6 +14,8 @@ INSERT INTO organization
   ('google'),
   ('apple'),
   ('ebay'),
+  ('lg'),
+  ('bosch'),
   ('samsung');
 
 DROP TABLE IF EXISTS document_side CASCADE;
@@ -35,3 +37,10 @@ CREATE TABLE document (
   CONSTRAINT fk_first_side FOREIGN KEY (first_side_id) references document_side (id),
   CONSTRAINT fk_second_side FOREIGN KEY (second_side_id) references document_side (id)
 );
+
+
+select * from organization;
+
+select * from document;
+
+select * from document_side;

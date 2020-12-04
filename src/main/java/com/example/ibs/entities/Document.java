@@ -1,13 +1,15 @@
 package com.example.ibs.entities;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "document")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Document {
 
@@ -16,11 +18,11 @@ public class Document {
     @Column
     private long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "first_side_id")
     private DocumentSide firstSide;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "second_side_id")
     private DocumentSide secondSide;
 
