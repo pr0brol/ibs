@@ -21,8 +21,8 @@ public class WorkflowService {
         this.orgService = orgService;
     }
 
-    public void addDocument(Long firstOrgId, String firstContent, Long secondOrgId, String secondContent) throws Exception {
-        if (firstOrgId == secondOrgId) throw new Exception("Одна компания не может создать весь документ");
+    public void addDocument(Long firstOrgId, String firstContent, Long secondOrgId, String secondContent) throws IllegalStateException {
+        if (firstOrgId == secondOrgId) throw new IllegalStateException("Одна компания не может создать весь документ");
 
         Organization firstOrg = orgService.findById(firstOrgId).get();
         Organization secondOrg = orgService.findById(secondOrgId).get();
@@ -44,38 +44,38 @@ public class WorkflowService {
         docService.save(document);
     }
 
-    public void removeDocument(Long orgId, Long docId) throws Exception {
+    public void removeDocument(Long orgId, Long docId) throws IllegalStateException {
         Document document = docService.findById(docId).get();
         if (orgId == document.getFirstSide().getOrganization().getId()) {
             if (document.getFirstSide().isSigned() || document.getSecondSide().isSigned()) {
-                throw new Exception("Документ начали подписывать, его нельзя удалить");
+                throw new IllegalStateException("Документ начали подписывать, его нельзя удалить");
             }
             docService.deleteById(docId);
         } else {
-            throw new Exception("Документ создан другой компанией, вы не можете его удалить");
+            throw new IllegalStateException("Документ создан другой компанией, вы не можете его удалить");
         }
     }
 
     @Transactional
-    public void signDocument(Long orgId, Long docId) throws Exception {
+    public void signDocument(Long orgId, Long docId) throws IllegalStateException {
         Document document = docService.findById(docId).get();
         if (document.getFirstSide().isSigned() && document.getSecondSide().isSigned()) {
-            throw new Exception("Документ подписан. Повторная подпись невозможна");
+            throw new IllegalStateException("Документ подписан. Повторная подпись невозможна");
         }
         if (orgId != document.getFirstSide().getOrganization().getId() &&
                 orgId != document.getSecondSide().getOrganization().getId()) {
-            throw new Exception("Вы не числитесь в данном документе");
+            throw new IllegalStateException("Вы не числитесь в данном документе");
         }
         if (document.getFirstSide().getOrganization().getId() == orgId) {
             if (document.getFirstSide().isSigned()) {
-                throw new Exception("Вы уже подписали документ");
+                throw new IllegalStateException("Вы уже подписали документ");
             } else {
                 document.getFirstSide().setSigned(true);
             }
         }
         if (document.getSecondSide().getOrganization().getId() == orgId) {
             if (!document.getFirstSide().isSigned()) {
-                throw new Exception("Документ ещё не подписан первой стороной");
+                throw new IllegalStateException("Документ ещё не подписан первой стороной");
             } else {
                 document.getSecondSide().setSigned(true);
             }
